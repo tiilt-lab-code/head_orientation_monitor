@@ -2,6 +2,8 @@ input.onButtonPressed(Button.A, function () {
     if (calibrated == 0) {
         initial_pitch = input.rotation(Rotation.Pitch)
         initial_roll = input.rotation(Rotation.Roll)
+        basic.showNumber(initial_pitch)
+        basic.showNumber(initial_roll)
         reset_vars()
     }
 })
@@ -14,6 +16,22 @@ function reset_vars () {
     data_count = 0
     calibrated = 1
 }
+input.onLogoEvent(TouchButtonEvent.Pressed, function () {
+    if (calibrated == 1) {
+        pause2 = 1
+        basic.showString("down")
+        basic.showNumber(down_time / data_count)
+        basic.showString("pitch var")
+        basic.showNumber(pitch_var / data_count)
+        basic.showString("roll var")
+        basic.showNumber(roll_var / data_count)
+        basic.showString("avg pitch")
+        basic.showNumber(avg_pitch)
+        basic.showString("avg roll")
+        basic.showNumber(avg_roll)
+        pause2 = 0
+    }
+})
 let pitch_changed = 0
 let roll_changed = 0
 let data_count = 0
@@ -22,29 +40,34 @@ let pitch_var = 0
 let roll_var = 0
 let avg_pitch = 0
 let avg_roll = 0
+let pause2 = 0
 let calibrated = 0
 let initial_pitch = 0
 let initial_roll = 0
 initial_roll = 100
 initial_pitch = 0
 calibrated = 0
-let threshold = 10
-basic.showString("Press A to calibrate")
+let threshold = 20
+pause2 = 0
+basic.showString("A to calibrate")
 basic.forever(function () {
     roll_changed = 0
     pitch_changed = 0
-    if (calibrated == 1) {
+    if (calibrated == 1 && pause2 == 0) {
         if (Math.abs(input.rotation(Rotation.Pitch) - initial_pitch) >= threshold) {
             pitch_changed = 1
             pitch_var += 1
+            avg_pitch = (data_count * avg_pitch + input.rotation(Rotation.Pitch)) / (data_count + 1)
+            if (input.rotation(Rotation.Pitch) - initial_pitch >= threshold) {
+                down_time += 1
+            }
         }
         if (Math.abs(input.rotation(Rotation.Roll) - initial_roll) >= threshold) {
             roll_changed = 1
             roll_var += 1
-        }
-        if (false || false) {
-        	
+            avg_roll = (data_count * avg_roll + input.rotation(Rotation.Roll)) / (data_count + 1)
         }
         data_count += 1
     }
+    basic.pause(500)
 })
