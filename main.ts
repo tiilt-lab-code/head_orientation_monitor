@@ -16,6 +16,22 @@ function reset_vars () {
     data_count = 0
     calibrated = 1
 }
+input.onButtonPressed(Button.AB, function () {
+    if (control.millis() - last_ab >= 5000) {
+        a_b_count = 0
+        last_ab = control.millis()
+    }
+    if (a_b_count >= 3) {
+        team_mode = 1
+        radio.setGroup(72)
+        basic.showString("team")
+    }
+})
+radio.onReceivedString(function (receivedString) {
+    if (receivedString == "head_tilt_reset" && team_mode == 1) {
+        reset_vars()
+    }
+})
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
     if (calibrated == 1) {
         pause2 = 1
@@ -34,12 +50,15 @@ input.onLogoEvent(TouchButtonEvent.Pressed, function () {
 })
 let pitch_changed = 0
 let roll_changed = 0
+let a_b_count = 0
 let data_count = 0
 let down_time = 0
 let pitch_var = 0
 let roll_var = 0
 let avg_pitch = 0
 let avg_roll = 0
+let last_ab = 0
+let team_mode = 0
 let pause2 = 0
 let calibrated = 0
 let initial_pitch = 0
@@ -49,6 +68,8 @@ initial_pitch = 0
 calibrated = 0
 let threshold = 20
 pause2 = 0
+team_mode = 0
+last_ab = control.millis()
 basic.showString("A to calibrate")
 basic.forever(function () {
     roll_changed = 0
