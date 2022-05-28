@@ -17,19 +17,37 @@ function reset_vars () {
     calibrated = 1
 }
 input.onButtonPressed(Button.AB, function () {
+    basic.showNumber(a_b_count)
     if (control.millis() - last_ab >= 5000) {
         a_b_count = 0
         last_ab = control.millis()
     }
+    a_b_count += 1
     if (a_b_count >= 3) {
-        team_mode = 1
-        radio.setGroup(72)
-        basic.showString("team")
+        if (team_mode == 0) {
+            team_mode = 1
+            radio.setTransmitSerialNumber(true)
+            radio.setGroup(72)
+            basic.showString("t")
+        } else {
+            team_mode = 0
+            basic.showString("i")
+        }
+        a_b_count = 0
     }
 })
 radio.onReceivedString(function (receivedString) {
     if (receivedString == "head_tilt_reset" && team_mode == 1) {
+        pause2 = 1
+        radio.sendValue("roll", avg_roll)
+        radio.sendValue("pitch", avg_pitch)
+        radio.sendValue("rvar", roll_var)
+        radio.sendValue("pvar", pitch_var)
+        radio.sendValue("dtime", down_time)
+        radio.sendValue("iroll", initial_roll)
+        radio.sendValue("ipitch", initial_pitch)
         reset_vars()
+        pause2 = 0
     }
 })
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
