@@ -23,6 +23,8 @@ input.onButtonPressed(Button.A, function () {
         front = 1
         initial_pitch = input.rotation(Rotation.Pitch)
         initial_roll = input.rotation(Rotation.Roll)
+        music.playTone(262, music.beat(BeatFraction.Whole))
+        basic.showString("F")
         reset_vars()
     }
 })
@@ -75,6 +77,10 @@ input.onButtonPressed(Button.B, function () {
     if (calibrated == 0) {
         initial_pitch = input.rotation(Rotation.Pitch)
         initial_roll = input.rotation(Rotation.Roll)
+        music.playTone(262, music.beat(BeatFraction.Whole))
+        music.rest(music.beat(BeatFraction.Whole))
+        music.playTone(262, music.beat(BeatFraction.Whole))
+        basic.showString("B")
         reset_vars()
     }
 })
