@@ -3,12 +3,14 @@ function pause_log () {
         pause2 = 1
         datalogger.log(
         datalogger.createCV("roll", avg_roll),
-        datalogger.createCV("rvar", roll_var),
+        datalogger.createCV("rvar", roll_var / data_count),
         datalogger.createCV("pitch", avg_pitch),
-        datalogger.createCV("pvar", pitch_var),
-        datalogger.createCV("dtime", down_time),
+        datalogger.createCV("pvar", pitch_var / data_count),
+        datalogger.createCV("dtime", down_time / data_count),
         datalogger.createCV("datacount", data_count)
         )
+        basic.showString("downtime")
+        basic.showNumber(down_time / data_count)
         pause2 = 0
     }
 }
@@ -63,6 +65,7 @@ radio.onReceivedString(function (receivedString) {
         radio.sendValue("dtime", down_time)
         radio.sendValue("iroll", initial_roll)
         radio.sendValue("ipitch", initial_pitch)
+        radio.sendValue("datacount", data_count)
         pause_log()
         reset_vars()
         pause2 = 0
@@ -81,10 +84,10 @@ input.onLogoEvent(TouchButtonEvent.Pressed, function () {
 let pitch_changed = 0
 let roll_changed = 0
 let a_b_count = 0
-let data_count = 0
 let down_time = 0
 let pitch_var = 0
 let avg_pitch = 0
+let data_count = 0
 let roll_var = 0
 let avg_roll = 0
 let front = 0
@@ -108,7 +111,7 @@ loops.everyInterval(500, function () {
     if (calibrated == 1 && pause2 == 0) {
         roll_changed = 0
         pitch_changed = 0
-        datalogger.log(datalogger.createCV("rot_pot", input.rotation(Rotation.Pitch)), datalogger.createCV("rot_roll", input.rotation(Rotation.Pitch)))
+        datalogger.log(datalogger.createCV("rot_pot", input.rotation(Rotation.Pitch)), datalogger.createCV("rot_roll", input.rotation(Rotation.Roll)))
         if (Math.abs(input.rotation(Rotation.Pitch) - initial_pitch) >= threshold) {
             pitch_changed = 1
             pitch_var += 1
@@ -130,5 +133,4 @@ loops.everyInterval(500, function () {
         }
         data_count += 1
     }
-    basic.pause(500)
 })
