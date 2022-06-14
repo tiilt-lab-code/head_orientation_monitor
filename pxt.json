@@ -5,7 +5,8 @@
         "core": "*",
         "radio": "*",
         "microphone": "*",
-        "datalogger": "*"
+        "datalogger": "*",
+        "Player_Detector_v2-player": "github:tiilt-lab-code/player_detector_v2-player#forheadtilt"
     },
     "files": [
         "main.blocks",
@@ -16,7 +17,7 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": "4.1.47",
+        "target": "4.1.52",
         "targetId": "microbit"
     },
     "supportedTargets": [
