@@ -18,9 +18,6 @@ datalogger.onLogFull(function () {
     pause2 = 1
     music.playTone(262, music.beat(BeatFraction.Breve))
 })
-input.onLogoEvent(TouchButtonEvent.LongPressed, function () {
-    pause_log()
-})
 input.onButtonPressed(Button.A, function () {
     if (calibrated == 0) {
         front = 1
@@ -81,6 +78,9 @@ input.onButtonPressed(Button.B, function () {
         reset_vars()
     }
 })
+input.onLogoEvent(TouchButtonEvent.Pressed, function () {
+    pause_log()
+})
 let pitch_changed = 0
 let roll_changed = 0
 let a_b_count = 0
@@ -111,10 +111,7 @@ loops.everyInterval(500, function () {
     if (calibrated == 1 && pause2 == 0) {
         roll_changed = 0
         pitch_changed = 0
-        datalogger.log(
-        datalogger.createCV("rot_pot", input.rotation(Rotation.Pitch)),
-        datalogger.createCV("rot_roll", input.rotation(Rotation.Roll))
-        )
+        datalogger.log(datalogger.createCV("rot_pot", input.rotation(Rotation.Pitch)), datalogger.createCV("rot_roll", input.rotation(Rotation.Roll)))
         if (Math.abs(input.rotation(Rotation.Pitch) - initial_pitch) >= threshold) {
             pitch_changed = 1
             pitch_var += 1
