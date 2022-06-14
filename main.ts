@@ -111,7 +111,10 @@ loops.everyInterval(500, function () {
     if (calibrated == 1 && pause2 == 0) {
         roll_changed = 0
         pitch_changed = 0
-        datalogger.log(datalogger.createCV("rot_pot", input.rotation(Rotation.Pitch)), datalogger.createCV("rot_roll", input.rotation(Rotation.Roll)))
+        datalogger.log(
+        datalogger.createCV("rot_pot", input.rotation(Rotation.Pitch)),
+        datalogger.createCV("rot_roll", input.rotation(Rotation.Roll))
+        )
         if (Math.abs(input.rotation(Rotation.Pitch) - initial_pitch) >= threshold) {
             pitch_changed = 1
             pitch_var += 1
